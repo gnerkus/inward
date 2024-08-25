@@ -1,5 +1,27 @@
 local card_module = require "card"
 
+-- generates a random color based on params?
+-- ----------------------------------------
+-- will be called each time the player has a successful match or
+-- time runs out
+function GetRandomGoal()
+    math.randomseed(os.time())
+    return {
+        math.random(),
+        math.random(),
+        math.random(),
+        1
+    }
+end
+
+function GetInitialMix(color)
+    local r = math.random(0, color[1] * 1000000) / 1000000
+    local g = math.random(0, color[2] * 1000000) / 1000000
+    local b = math.random(0, color[3] * 1000000) / 1000000
+
+    return { r, g, b, 1 }
+end
+
 function love.load()
     ArenaWidth = 1024
     ArenaHeight = 640
@@ -32,15 +54,15 @@ function love.load()
     SideBarCenterX = SideBarX + (ArenaWidth - SideBarX) / 2
     SideBarCenterY = ArenaHeight / 2
 
-    MixBoxColor = { 1, 1, 1, 1 }
-    MixBoxWidth = 128
-    MixBoxX = SideBarCenterX - MixBoxWidth / 2
-    MixBoxY = SideBarCenterY - MixBoxWidth / 2
-
-    GoalBoxColor = { 1, 1, 1, 1 }
+    GoalBoxColor = GetRandomGoal()
     GoalBoxX = BoardOffsetX + (CardWidth * MaxBoardColCount) + (BoardOffsetX * 2)
     GoalBoxY = BoardOffsetY
     GoalBoxWidth = 64
+
+    MixBoxColor = GetInitialMix(GoalBoxColor)
+    MixBoxWidth = 128
+    MixBoxX = SideBarCenterX - MixBoxWidth / 2
+    MixBoxY = SideBarCenterY - MixBoxWidth / 2
 end
 
 -- return -1 if no card else card index
