@@ -9,20 +9,19 @@ setmetatable(Card, {
 
 -- creates a copy of the Card table with all the methods
 -- that have been added to the Card table
-function Card.new(init)
+-- color is a table of color values {1, 1, 1, 1} ({r, g, b, a})
+function Card.new(color)
     local self = setmetatable({}, Card)
-    self.value = init
+    self.color = color
+    self.isActive = false
     return self
 end
 
 -- when the set_value of a copy of the Card table is called, it accesses
 -- the local variable self and sets the value
-function Card:set_value(newval)
-    self.value = newval
-end
-
-function Card:get_value()
-    return self.value
+function Card:draw(xPos, yPos, width)
+    love.graphics.setColor(self.color)
+    love.graphics.rectangle('fill', xPos, yPos, width, width)
 end
 
 local mymodule = {}
