@@ -1,6 +1,9 @@
 local card_module = require "card"
 
 function love.load()
+    ArenaWidth = 1024
+    ArenaHeight = 640
+
     CardWidth = 64
     Board = {
         card_module.Card.new({ 1, 0, 0, 1 }),
@@ -13,8 +16,8 @@ function love.load()
         card_module.Card.new({ 0, 0, 0, 1 }),
         card_module.Card.new({ 1, 0, 0, 1 }),
     }
-    BoardX = 64
-    BoardY = 64
+    BoardX = 32
+    BoardY = 32
     BoardSize = 3
 end
 
