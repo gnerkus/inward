@@ -80,7 +80,7 @@ function mousePosToCardIdx(posX, posY)
     end
 end
 
-function love.mousereleased(x, y, button, istouch, presses)
+function love.mousereleased(x, y, button, _, _)
     if button == 1 then
         local cardIdx = mousePosToCardIdx(x, y)
 
