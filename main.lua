@@ -86,7 +86,9 @@ function love.mousereleased(x, y, button, istouch, presses)
 
         if cardIdx > 0 then
             local card = Board[cardIdx]
-            MixBoxColor = card.color
+            if card.isActive then
+                MixBoxColor = card.color
+            end
         end
     end
 end
