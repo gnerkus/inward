@@ -22,6 +22,17 @@ function GetInitialMix(color)
     return { r, g, b, 1 }
 end
 
+-- TODO: move this to the color class
+-- colors are in bit (0 - 255)
+function MixHue(first, second, strength)
+    if strength == nil then strength = 0.5 end
+    local r = first[1] * (1 - strength) + second[1] * strength
+    local g = first[2] * (1 - strength) + second[2] * strength
+    local b = first[3] * (1 - strength) + second[3] * strength
+    local a = first[4] * (1 - strength) + second[4] * strength
+    return {r, g, b, a}
+end
+
 function love.load()
     ArenaWidth = 1024
     ArenaHeight = 640
@@ -80,7 +91,7 @@ function mousePosToCardIdx(posX, posY)
     end
 end
 
-function love.mousereleased(x, y, button, istouch, presses)
+function love.mousereleased(x, y, button, _, _)
     if button == 1 then
         local cardIdx = mousePosToCardIdx(x, y)
 
