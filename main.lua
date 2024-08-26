@@ -28,12 +28,28 @@ end
 function MixHue(first, second, strength)
     if strength == nil then strength = 0.5 end
 
+    local alpha_distance = first.a - second.a
+    local gen_weight = strength * 2 - 1
+    local weight_by_distance = gen_weight * alpha_distance
+
+    local weight1 = (gen_weight + 1) / 2
+
+    if not weight_by_distance == -1 then
+        weight1 = (((gen_weight + alpha_distance) / (1 + weight_by_distance)) + 1) / 2
+    end
+
+    local weight2 = 1 - weight1
+
     return {
-        r = first.r * (1 - strength) + second.r * strength,
-        g = first.g * (1 - strength) + second.g * strength,
-        b = first.b * (1 - strength) + second.b * strength,
-        a = first.a * (1 - strength) + second.a * strength,
+        r = first.r * weight1 + second.r * weight2,
+        g = first.g * weight1 + second.g * weight2,
+        b = first.b * weight1 + second.b * weight2,
+        a = first.a * strength + second.a * (1 - strength)
     }
+end
+
+function SplitHue(source, strength)
+    if strength == nil then strength = 0.5 end
 end
 
 function love.load()
@@ -117,6 +133,8 @@ function love.draw()
             CardWidth
         )
     end
+
+    MixBoxColor = MixHue({ r = 255, g = 0, b = 0, a = 1 }, { r = 0, g = 255, b = 0, a = 1 })
 
     -- draw mix box
     love.graphics.setColor(love.math.colorFromBytes(MixBoxColor.r, MixBoxColor.g, MixBoxColor.b))
