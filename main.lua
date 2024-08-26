@@ -7,30 +7,33 @@ local card_module = require "card"
 function GetRandomGoal()
     math.randomseed(os.time())
     return {
-        math.random(),
-        math.random(),
-        math.random(),
-        1
+        r = math.random(0, 255),
+        g = math.random(0, 255),
+        b = math.random(0, 255),
+        a = 1
     }
 end
 
 function GetInitialMix(color)
-    local r = math.random(0, color[1] * 1000000) / 1000000
-    local g = math.random(0, color[2] * 1000000) / 1000000
-    local b = math.random(0, color[3] * 1000000) / 1000000
-
-    return { r, g, b, 1 }
+    return {
+        r = math.random(0, 255),
+        g = math.random(0, 255),
+        b = math.random(0, 255),
+        a = 1
+    }
 end
 
--- TODO: move this to the color class
+-- first and second are tables representing the colors from cards
 -- colors are in bit (0 - 255)
 function MixHue(first, second, strength)
     if strength == nil then strength = 0.5 end
-    local r = first[1] * (1 - strength) + second[1] * strength
-    local g = first[2] * (1 - strength) + second[2] * strength
-    local b = first[3] * (1 - strength) + second[3] * strength
-    local a = first[4] * (1 - strength) + second[4] * strength
-    return {r, g, b, a}
+
+    return {
+        r = first.r * (1 - strength) + second.r * strength,
+        g = first.g * (1 - strength) + second.g * strength,
+        b = first.b * (1 - strength) + second.b * strength,
+        a = first.a * (1 - strength) + second.a * strength,
+    }
 end
 
 function love.load()
@@ -50,15 +53,15 @@ function love.load()
     BoardTopY = BoardOriginY - (BoardSize / 2 * CardWidth)
 
     Board = {
-        card_module.Card.new({ 0.75, 0, 0, 1 }),
-        card_module.Card.new({ 0.75, 0.25, 0, 1 }),
-        card_module.Card.new({ 0.75, 0.5, 0, 1 }),
-        card_module.Card.new({ 0.5, 0.75, 0, 1 }),
-        card_module.Card.new({ 0.25, 0.75, 0, 1 }),
-        card_module.Card.new({ 0, 0.75, 0.25, 1 }),
-        card_module.Card.new({ 0, 0.75, 0.5, 1 }),
-        card_module.Card.new({ 0, 0.5, 0.75, 1 }),
-        card_module.Card.new({ 0, 0.25, 0.75, 1 }),
+        card_module.Card.new({ 192, 0, 0, 1 }),
+        card_module.Card.new({ 192, 64, 0, 1 }),
+        card_module.Card.new({ 192, 128, 0, 1 }),
+        card_module.Card.new({ 128, 192, 0, 1 }),
+        card_module.Card.new({ 64, 192, 0, 1 }),
+        card_module.Card.new({ 0, 192, 64, 1 }),
+        card_module.Card.new({ 0, 192, 128, 1 }),
+        card_module.Card.new({ 0, 128, 192, 1 }),
+        card_module.Card.new({ 0, 64, 192, 1 }),
     }
 
     SideBarX = CardWidth * MaxBoardColCount + BoardOffsetX * 2
@@ -116,10 +119,10 @@ function love.draw()
     end
 
     -- draw mix box
-    love.graphics.setColor(MixBoxColor)
+    love.graphics.setColor(love.math.colorFromBytes(MixBoxColor.r, MixBoxColor.g, MixBoxColor.b))
     love.graphics.rectangle('fill', MixBoxX, MixBoxY, MixBoxWidth, MixBoxWidth)
 
     -- draw goal box
-    love.graphics.setColor(GoalBoxColor)
+    love.graphics.setColor(love.math.colorFromBytes(GoalBoxColor.r, GoalBoxColor.g, GoalBoxColor.b))
     love.graphics.rectangle('fill', GoalBoxX, GoalBoxY, GoalBoxWidth, GoalBoxWidth)
 end
