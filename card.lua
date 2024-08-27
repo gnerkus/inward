@@ -1,4 +1,4 @@
-local Card = {}
+Card = {}
 Card.__index = Card
 
 setmetatable(Card, {
@@ -7,9 +7,12 @@ setmetatable(Card, {
     end,
 })
 
--- creates a copy of the Card table with all the methods
--- that have been added to the Card table
--- color is a table of color values {255, 255, 255, 255} ({r, g, b, a})
+Card.WIDTH = 64
+
+---creates a copy of the Card table with all the methods
+---that have been added to the Card table
+---@param color table a table of color values {255, 255, 255, 255} ({r, g, b, a})
+---@return table
 function Card.new(color)
     local self = setmetatable({}, Card)
     self.color = color
@@ -19,13 +22,13 @@ end
 
 -- when the set_value of a copy of the Card table is called, it accesses
 -- the local variable self and sets the value
-function Card:draw(xPos, yPos, width)
+function Card:draw(xPos, yPos)
     love.graphics.setColor(love.math.colorFromBytes(
         self.color.r,
         self.color.g,
         self.color.b
     ))
-    love.graphics.rectangle('fill', xPos, yPos, width, width)
+    love.graphics.rectangle('fill', xPos, yPos, Card.WIDTH, Card.WIDTH)
 end
 
 function Card:get_color_bytes()
@@ -40,6 +43,4 @@ function Card:get_color()
     )
 end
 
-local mymodule = {}
-mymodule.Card = Card
-return mymodule
+return Card
