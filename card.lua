@@ -12,12 +12,7 @@ setmetatable(Card, {
 -- color is a table of color values {255, 255, 255, 255} ({r, g, b, a})
 function Card.new(color)
     local self = setmetatable({}, Card)
-    self.color = {
-        r = color[1],
-        g = color[2],
-        b = color[3],
-        a = color[4],
-    }
+    self.color = color
     self.isActive = false
     return self
 end

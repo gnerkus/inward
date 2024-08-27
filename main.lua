@@ -14,15 +14,10 @@ function GetRandomGoal()
     }
 end
 
-function GetInitialMix(color)
-    return {
-        r = math.random(0, 255),
-        g = math.random(0, 255),
-        b = math.random(0, 255),
-        a = 1
-    }
-end
-
+--
+-- Copyright (c) 2006-2009 Hampton Catlin, Natalie Weizenbaum, and Chris Eppstein
+-- http://sass-lang.com
+--
 -- first and second are tables representing the colors from cards
 -- colors are in bit (0 - 255)
 function MixHue(first, second, strength)
@@ -48,8 +43,28 @@ function MixHue(first, second, strength)
     }
 end
 
+-- currently, strength is always 0.5
 function SplitHue(source, strength)
     if strength == nil then strength = 0.5 end
+
+    local first = {
+        r = math.random(math.max(0, (source.r * 2) - 255), math.min(2 * source.r, 255)),
+        g = math.random(math.max(0, (source.g * 2) - 255), math.min(2 * source.g, 255)),
+        b = math.random(math.max(0, (source.b * 2) - 255), math.min(2 * source.b, 255)),
+        a = 1
+    }
+
+    local weight1 = strength
+    local weight2 = 1 - strength
+
+    local second = {
+        r = (source.r - (first.r * weight1)) / weight2,
+        g = (source.g - (first.g * weight1)) / weight2,
+        b = (source.b - (first.b * weight1)) / weight2,
+        a = 1
+    }
+
+    return { first, second }
 end
 
 function love.load()
@@ -68,31 +83,37 @@ function love.load()
     BoardTopX = BoardOriginX - (BoardSize / 2 * CardWidth)
     BoardTopY = BoardOriginY - (BoardSize / 2 * CardWidth)
 
-    Board = {
-        card_module.Card.new({ 192, 0, 0, 1 }),
-        card_module.Card.new({ 192, 64, 0, 1 }),
-        card_module.Card.new({ 192, 128, 0, 1 }),
-        card_module.Card.new({ 128, 192, 0, 1 }),
-        card_module.Card.new({ 64, 192, 0, 1 }),
-        card_module.Card.new({ 0, 192, 64, 1 }),
-        card_module.Card.new({ 0, 192, 128, 1 }),
-        card_module.Card.new({ 0, 128, 192, 1 }),
-        card_module.Card.new({ 0, 64, 192, 1 }),
-    }
-
     SideBarX = CardWidth * MaxBoardColCount + BoardOffsetX * 2
     SideBarCenterX = SideBarX + (ArenaWidth - SideBarX) / 2
     SideBarCenterY = ArenaHeight / 2
+
+    MixWeight = 0.5
 
     GoalBoxColor = GetRandomGoal()
     GoalBoxX = BoardOffsetX + (CardWidth * MaxBoardColCount) + (BoardOffsetX * 2)
     GoalBoxY = BoardOffsetY
     GoalBoxWidth = 64
 
-    MixBoxColor = GetInitialMix(GoalBoxColor)
+    local splitcolors = SplitHue(GoalBoxColor, MixWeight)
+
+    MixBoxColor = splitcolors[1]
     MixBoxWidth = 128
     MixBoxX = SideBarCenterX - MixBoxWidth / 2
     MixBoxY = SideBarCenterY - MixBoxWidth / 2
+
+    InitColor = splitcolors[2]
+
+    Board = {
+        card_module.Card.new(splitcolors[2]),
+        -- card_module.Card.new({ 192, 64, 0, 1 }),
+        -- card_module.Card.new({ 192, 128, 0, 1 }),
+        -- card_module.Card.new({ 128, 192, 0, 1 }),
+        -- card_module.Card.new({ 64, 192, 0, 1 }),
+        -- card_module.Card.new({ 0, 192, 64, 1 }),
+        -- card_module.Card.new({ 0, 192, 128, 1 }),
+        -- card_module.Card.new({ 0, 128, 192, 1 }),
+        -- card_module.Card.new({ 0, 64, 192, 1 }),
+    }
 end
 
 -- return -1 if no card else card index
@@ -134,8 +155,6 @@ function love.draw()
         )
     end
 
-    MixBoxColor = MixHue({ r = 255, g = 0, b = 0, a = 1 }, { r = 0, g = 255, b = 0, a = 1 })
-
     -- draw mix box
     love.graphics.setColor(love.math.colorFromBytes(MixBoxColor.r, MixBoxColor.g, MixBoxColor.b))
     love.graphics.rectangle('fill', MixBoxX, MixBoxY, MixBoxWidth, MixBoxWidth)
@@ -143,4 +162,37 @@ function love.draw()
     -- draw goal box
     love.graphics.setColor(love.math.colorFromBytes(GoalBoxColor.r, GoalBoxColor.g, GoalBoxColor.b))
     love.graphics.rectangle('fill', GoalBoxX, GoalBoxY, GoalBoxWidth, GoalBoxWidth)
+
+    -- TODO: delete these
+    ----------------------
+    -- love.graphics.setColor({ 1, 1, 1, 1 })
+    -- love.graphics.print(table.concat({
+    --     'r: ' .. GoalBoxColor.r,
+    --     ' g: ' .. GoalBoxColor.g,
+    --     ' b: ' .. GoalBoxColor.b,
+    --     ' a: ' .. GoalBoxColor.a
+    -- }), 0, 0)
+
+    -- love.graphics.setColor({ 1, 1, 1, 1 })
+    -- love.graphics.print(table.concat({
+    --     'r: ' .. MixBoxColor.r,
+    --     ' g: ' .. MixBoxColor.g,
+    --     ' b: ' .. MixBoxColor.b,
+    --     ' a: ' .. MixBoxColor.a
+    -- }), 0, 32)
+
+    -- love.graphics.print(table.concat({
+    --     'r: ' .. InitColor.r,
+    --     ' g: ' .. InitColor.g,
+    --     ' b: ' .. InitColor.b,
+    --     ' a: ' .. InitColor.a
+    -- }), 0, 64)
+
+    -- local goalback = MixHue(MixBoxColor, InitColor, MixWeight)
+    -- love.graphics.print(table.concat({
+    --     'r: ' .. goalback.r,
+    --     ' g: ' .. goalback.g,
+    --     ' b: ' .. goalback.b,
+    --     ' a: ' .. goalback.a
+    -- }), 0, 96)
 end
