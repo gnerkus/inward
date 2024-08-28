@@ -8,7 +8,7 @@ setmetatable(Card, {
 })
 
 Card.WIDTH = 64
-Card.SIZE_TABLE = { 48, 36, 18 }
+Card.SIZE_TABLE = { 48, 36, 16 }
 
 ---creates a copy of the Card table with all the methods
 ---that have been added to the Card table
@@ -33,8 +33,8 @@ function Card:draw(xPos, yPos)
     local topY = yPos - size / 2
 
     if self.turnsLeft == 0 then
-        love.graphics.setColor({ 1, 1, 1, 1 })
-        love.graphics.rectangle('fill', topX - 2, topY - 2, size + 4, size + 4)
+        love.graphics.setColor({ 1, 1, 1, 0.5 })
+        love.graphics.rectangle('line', topX - 4, topY - 4, size + 8, size + 8)
     end
 
     love.graphics.setColor(love.math.colorFromBytes(
@@ -57,8 +57,9 @@ function Card:get_color()
     )
 end
 
+---TODO: replace '3' with a constant
 function Card:countdown()
-    self.turnsLeft = math.max(self.turnsLeft - 1, 0)
+    self.turnsLeft = (self.turnsLeft + 3 - 1) % 3
     if self.turnsLeft == 0 then self.isActive = true end
 end
 

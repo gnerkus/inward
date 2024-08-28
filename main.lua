@@ -62,6 +62,10 @@ function love.mousereleased(x, y, button, _, _)
                 MixBoxColor = card.color
             end
         end
+
+        for cardIdx, card in ipairs(Board) do
+            card:countdown()
+        end
     end
 end
 
