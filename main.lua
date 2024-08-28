@@ -33,16 +33,22 @@ function love.load()
     MixBoxX = SideBarCenterX - MixBoxWidth / 2
     MixBoxY = SideBarCenterY - MixBoxWidth / 2
 
+    ActiveCount = 4
+
     InitColor = splitcolors[2]
 
     Board = {
-        Card.new(InitColor),
+        Card.new(InitColor, true),
     }
 
     local neighbours = GetNeighbourColors(InitColor, 10)
 
+    local activePool = { true, true, true, false, false, false, false, false }
+
     for index, value in ipairs(neighbours) do
-        table.insert(Board, Card.new(value))
+        local isActive = table.remove(activePool, math.random(#activePool))
+
+        table.insert(Board, Card.new(value, isActive))
     end
 end
 

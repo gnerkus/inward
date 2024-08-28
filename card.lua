@@ -13,10 +13,10 @@ Card.WIDTH = 64
 ---that have been added to the Card table
 ---@param color table a table of color values {255, 255, 255, 255} ({r, g, b, a})
 ---@return table
-function Card.new(color)
+function Card.new(color, isActive)
     local self = setmetatable({}, Card)
     self.color = color
-    self.isActive = false
+    self.isActive = isActive or false
     return self
 end
 
