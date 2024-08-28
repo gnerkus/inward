@@ -38,17 +38,17 @@ function love.load()
     InitColor = splitcolors[2]
 
     Board = {
-        Card.new(InitColor, true),
+        Card.new(InitColor, 0),
     }
 
-    local neighbours = GetNeighbourColors(InitColor, 10)
+    local neighbours = GetNeighbourColors(InitColor, 15)
 
-    local activePool = { true, true, true, false, false, false, false, false }
+    local turnsPool = { 0, 0, 0, 1, 1, 2, 2, 2 }
 
     for index, value in ipairs(neighbours) do
-        local isActive = table.remove(activePool, math.random(#activePool))
+        local turnsLeft = table.remove(turnsPool, math.random(#turnsPool))
 
-        table.insert(Board, Card.new(value, isActive))
+        table.insert(Board, Card.new(value, turnsLeft))
     end
 end
 
@@ -70,8 +70,8 @@ function love.draw()
 
     for cardIdx, card in ipairs(Board) do
         card:draw(
-            BoardTopX + ((cardIdx - 1) % BoardSize) * Card.WIDTH,
-            BoardTopY + math.floor((cardIdx - 1) / BoardSize) * Card.WIDTH
+            BoardTopX + ((cardIdx - 1) % BoardSize) * Card.WIDTH + math.floor(Card.WIDTH / 2),
+            BoardTopY + math.floor((cardIdx - 1) / BoardSize) * Card.WIDTH + Card.WIDTH / 2
         )
     end
 
