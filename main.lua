@@ -36,16 +36,14 @@ function love.load()
     InitColor = splitcolors[2]
 
     Board = {
-        Card.new(splitcolors[2]),
-        -- card_module.Card.new({ 192, 64, 0, 1 }),
-        -- card_module.Card.new({ 192, 128, 0, 1 }),
-        -- card_module.Card.new({ 128, 192, 0, 1 }),
-        -- card_module.Card.new({ 64, 192, 0, 1 }),
-        -- card_module.Card.new({ 0, 192, 64, 1 }),
-        -- card_module.Card.new({ 0, 192, 128, 1 }),
-        -- card_module.Card.new({ 0, 128, 192, 1 }),
-        -- card_module.Card.new({ 0, 64, 192, 1 }),
+        Card.new(InitColor),
     }
+
+    local neighbours = GetNeighbourColors(InitColor, 10)
+
+    for index, value in ipairs(neighbours) do
+        table.insert(Board, Card.new(value))
+    end
 end
 
 function love.mousereleased(x, y, button, _, _)
