@@ -99,15 +99,71 @@ function RGBtoHSL(sourceRGB)
     end
 
     return {
-        h = hue * 360,
+        h = math.floor(hue * 360),
         s = sat,
         l = lum,
         a = sourceRGB.a
     }
 end
 
-function GetNeighbourColors(source, deviation)
+function HueToRGB(p, q, t)
+    if t < 0 then t = t + 1 end
+    if t > 1 then t = t - 1 end
+    if t < 1 / 6 then return p + (q - p) * 6 * t end
+    if t < 1 / 2 then return q end
+    if t < 2 / 3 then return p + (q - p) * (2 / 3 - t) * 6 end
+    return p
+end
 
+---Converts a colour in HSL to RGB
+---@param sourceHSL table the HSL color
+function HSLtoRGB(sourceHSL)
+    local red = sourceHSL.l
+    local green = sourceHSL.l
+    local blue = sourceHSL.l
+
+    local hueFloat = sourceHSL.h / 359
+
+    if sourceHSL.s ~= 0 then
+        local q = sourceHSL.l < 0.5 and sourceHSL.l * (1 + sourceHSL.s) or
+            sourceHSL.l + sourceHSL.s - sourceHSL.l * sourceHSL.s
+        local p = 2 * sourceHSL.l - q
+
+        red = HueToRGB(p, q, hueFloat + 1 / 3)
+        green = HueToRGB(p, q, hueFloat)
+        blue = HueToRGB(p, q, hueFloat - 1 / 3)
+    end
+
+    return {
+        r = math.ceil(red * 255),
+        g = math.ceil(green * 255),
+        b = math.ceil(blue * 255),
+        a = sourceHSL.a
+    }
+end
+
+---Create a 'palette' around the source color
+---@param sourceRGB table base of the palette in RGB
+---@param deviation number distance between each color in the palette
+function GetNeighbourColors(sourceRGB, deviation)
+    local function rotateHue(source, degree, direction)
+        return (source + 360 + degree * direction) % 360
+    end
+
+    local neighbours = {}
+    local sourceHSL = RGBtoHSL(sourceRGB)
+    for i = 1, 8, 1 do
+        local direction = i % 2 == 0 and 1 or -1
+        local color = {
+            h = rotateHue(sourceHSL.h, deviation * i, direction),
+            s = sourceHSL.s,
+            l = sourceHSL.l,
+            a = sourceHSL.a
+        }
+        table.insert(neighbours, HSLtoRGB(color))
+    end
+
+    return neighbours
 end
 
 -- return -1 if no card else card index
