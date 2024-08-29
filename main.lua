@@ -2,16 +2,6 @@ dofile("./card.lua")
 dofile("./utils.lua")
 dofile("./goal.lua")
 
-function StartGame()
-    GoalBox:set_active()
-end
-
-function ResetGoal()
-    local newColor = GetRandomGoal()
-    GoalBox:set_color(newColor)
-    GoalBox:reset_timer()
-end
-
 function love.load()
     ArenaWidth = 1024
     ArenaHeight = 640
@@ -31,7 +21,7 @@ function love.load()
     SideBarCenterY = ArenaHeight / 2
 
     Score = 0
-    GoalTimer = 0
+    PlayerHP = 3
 
     MixWeight = 0.5
 
@@ -70,6 +60,15 @@ function love.load()
         table.insert(Board, Card.new(value, turnsLeft))
     end
 
+    function StartGame()
+        GoalBox:set_active()
+    end
+
+    function ResetGoal()
+        local newColor = GetRandomGoal()
+        GoalBox:reset(newColor)
+    end
+
     StartGame()
 end
 
@@ -80,7 +79,7 @@ function love.mousereleased(x, y, button, _, _)
         if cardIdx > 0 then
             local card = Board[cardIdx]
             if card.isActive then
-                MixBoxColor = card.color
+                MixBoxColor = MixHue(MixBoxColor, card.color)
             end
         end
 
