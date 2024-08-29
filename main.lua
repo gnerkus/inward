@@ -58,6 +58,8 @@ function love.load()
         Card.new(InitColor, 0),
     }
 
+    MatchDifficulty = 20
+
     local neighbours = GetNeighbourColors(InitColor, 15)
 
     local turnsPool = { 0, 0, 0, 1, 1, 2, 2, 2 }
@@ -70,6 +72,7 @@ function love.load()
 
     function StartGame()
         GoalBox:set_active()
+        GoalBox:set_epsilon(MatchDifficulty)
     end
 
     function ResetGoal()

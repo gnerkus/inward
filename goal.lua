@@ -9,15 +9,14 @@ setmetatable(Goal, {
     end,
 })
 
-Goal.CHANNEL_EPSILON = 10
-
-function Goal.new(color, x, y, width, timeLeft)
+function Goal.new(color, x, y, width, timeLeft, epsilon)
     local self = setmetatable({}, Goal)
     self.color = color
     self.x = x
     self.y = y
     self.width = width
     self.maxTimeLeft = timeLeft
+    self.epsilon = epsilon
     self.timeLeft = timeLeft
     self.isActive = false
     self.hasMatch = false
@@ -54,11 +53,15 @@ function Goal:countdown(dt)
     end
 end
 
+function Goal:set_epsilon(epsilon)
+    self.epsilon = epsilon
+end
+
 ---@param mix table mix of the selected color and color in mixbox
 function Goal:check_mix(mix)
-    local isRedMatch = math.abs(mix.r - self.color.r) <= Goal.CHANNEL_EPSILON
-    local isGreenMatch = math.abs(mix.g - self.color.g) <= Goal.CHANNEL_EPSILON
-    local isBlueMatch = math.abs(mix.b - self.color.b) <= Goal.CHANNEL_EPSILON
+    local isRedMatch = math.abs(mix.r - self.color.r) <= self.epsilon
+    local isGreenMatch = math.abs(mix.g - self.color.g) <= self.epsilon
+    local isBlueMatch = math.abs(mix.b - self.color.b) <= self.epsilon
 
     if isRedMatch and isGreenMatch and isBlueMatch then
         self.hasMatch = true
