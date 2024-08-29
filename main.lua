@@ -2,7 +2,15 @@ dofile("./card.lua")
 dofile("./utils.lua")
 dofile("./goal.lua")
 
+function GameOver()
+
+end
+
 function love.load()
+    local font = love.graphics.newFont(64, "mono")
+    font:setFilter("nearest")
+    love.graphics.setFont(font)
+
     ArenaWidth = 1024
     ArenaHeight = 640
 
@@ -93,12 +101,17 @@ end
 
 function love.update(dt)
     if GoalBox.hasMatch then
+        Score = Score + 10
         ResetGoal()
     end
 
     GoalBox:countdown(dt)
 
     if GoalBox.timeLeft <= 0 then
+        PlayerHP = PlayerHP - 1
+        if PlayerHP <= 0 then
+            GameOver()
+        end
         ResetGoal()
     end
 end
@@ -119,4 +132,9 @@ function love.draw()
 
     -- draw goal box
     GoalBox:draw()
+
+    ---draw timer
+    love.graphics.origin()
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.print(math.ceil(GoalBox.timeLeft), ArenaWidth - BoardOffsetX - 64, BoardOffsetY)
 end
