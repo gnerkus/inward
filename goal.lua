@@ -31,6 +31,18 @@ function Goal:set_active()
     self.isActive = true
 end
 
+function Goal:set_inactive()
+    self.isActive = false
+end
+
+function Goal:set_color(color)
+    self.color = color
+end
+
+function Goal:reset_timer()
+    self.timeLeft = self.maxTimeLeft
+end
+
 function Goal:countdown(dt)
     if self.isActive then
         self.timeLeft = self.timeLeft - dt

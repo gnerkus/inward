@@ -2,6 +2,16 @@ dofile("./card.lua")
 dofile("./utils.lua")
 dofile("./goal.lua")
 
+function StartGame()
+    GoalBox:set_active()
+end
+
+function ResetGoal()
+    local newColor = GetRandomGoal()
+    GoalBox:set_color(newColor)
+    GoalBox:reset_timer()
+end
+
 function love.load()
     ArenaWidth = 1024
     ArenaHeight = 640
@@ -59,6 +69,8 @@ function love.load()
 
         table.insert(Board, Card.new(value, turnsLeft))
     end
+
+    StartGame()
 end
 
 function love.mousereleased(x, y, button, _, _)
@@ -80,7 +92,11 @@ function love.mousereleased(x, y, button, _, _)
 end
 
 function love.update(dt)
+    GoalBox:countdown(dt)
 
+    if GoalBox.timeLeft <= 0 then
+        ResetGoal()
+    end
 end
 
 function love.draw()
