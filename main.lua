@@ -16,6 +16,8 @@ function love.load()
 
     MaxBoardColCount = 9
 
+    HasInput = false
+
     BoardOffsetX = 32
     BoardOffsetY = 32
     BoardOriginX = BoardOffsetX + (Card.WIDTH * MaxBoardColCount / 2)
@@ -88,21 +90,30 @@ function love.mousereleased(x, y, button, _, _)
         local cardIdx = MousePosToCardIdx(x, y)
 
         if cardIdx > 0 then
+            HasInput = true
             local card = Board[cardIdx]
             if card.isActive then
                 MixBoxColor = MixHue(MixBoxColor, card.color)
                 GoalBox:check_mix(MixBoxColor)
             end
         end
-
-        ---TODO: set a flag for the love.update then move the 'countdown' to update
-        for cardIdx, card in ipairs(Board) do
-            card:countdown()
-        end
     end
 end
 
 function love.update(dt)
+    if HasInput then
+        for _, card in ipairs(Board) do
+            if card.isActive then
+                local newCardColor = GetRandomColor()
+                card:set_color(newCardColor)
+                card:reset_turns()
+            else
+                card:countdown()
+            end
+        end
+        HasInput = false
+    end
+
     if GoalBox.hasMatch then
         Score = Score + 10
         ResetGoal()

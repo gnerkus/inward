@@ -12,6 +12,15 @@ function GetRandomGoal()
     }
 end
 
+function GetRandomColor()
+    return {
+        r = math.random(0, 255),
+        g = math.random(0, 255),
+        b = math.random(0, 255),
+        a = 1
+    }
+end
+
 --
 -- Copyright (c) 2006-2009 Hampton Catlin, Natalie Weizenbaum, and Chris Eppstein
 -- http://sass-lang.com
