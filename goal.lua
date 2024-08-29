@@ -9,6 +9,8 @@ setmetatable(Goal, {
     end,
 })
 
+Goal.CHANNEL_EPSILON = 10
+
 function Goal.new(color, x, y, width, timeLeft)
     local self = setmetatable({}, Goal)
     self.color = color
@@ -18,6 +20,7 @@ function Goal.new(color, x, y, width, timeLeft)
     self.maxTimeLeft = timeLeft
     self.timeLeft = timeLeft
     self.isActive = false
+    self.hasMatch = false
     return self
 end
 
@@ -39,13 +42,26 @@ function Goal:set_color(color)
     self.color = color
 end
 
-function Goal:reset_timer()
+function Goal:reset(newColor)
+    self.set_color(self, newColor)
     self.timeLeft = self.maxTimeLeft
+    self.hasMatch = false
 end
 
 function Goal:countdown(dt)
     if self.isActive then
         self.timeLeft = self.timeLeft - dt
+    end
+end
+
+---@param mix table mix of the selected color and color in mixbox
+function Goal:check_mix(mix)
+    local isRedMatch = math.abs(mix.r - self.color.r) <= Goal.CHANNEL_EPSILON
+    local isGreenMatch = math.abs(mix.g - self.color.g) <= Goal.CHANNEL_EPSILON
+    local isBlueMatch = math.abs(mix.b - self.color.b) <= Goal.CHANNEL_EPSILON
+
+    if isRedMatch and isGreenMatch and isBlueMatch then
+        self.hasMatch = true
     end
 end
 

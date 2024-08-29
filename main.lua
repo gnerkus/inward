@@ -80,6 +80,7 @@ function love.mousereleased(x, y, button, _, _)
             local card = Board[cardIdx]
             if card.isActive then
                 MixBoxColor = MixHue(MixBoxColor, card.color)
+                GoalBox:check_mix(MixBoxColor)
             end
         end
 
@@ -91,6 +92,10 @@ function love.mousereleased(x, y, button, _, _)
 end
 
 function love.update(dt)
+    if GoalBox.hasMatch then
+        ResetGoal()
+    end
+
     GoalBox:countdown(dt)
 
     if GoalBox.timeLeft <= 0 then
