@@ -32,8 +32,8 @@ function Card:draw(xPos, yPos)
     local topX = xPos - size / 2
     local topY = yPos - size / 2
 
-    if self.turnsLeft == 0 then
-        love.graphics.setColor({ 1, 1, 1, 0.5 })
+    if self.isActive then
+        love.graphics.setColor({ 1, 1, 1, 1 })
         love.graphics.rectangle('line', topX - 4, topY - 4, size + 8, size + 8)
     end
 
@@ -60,7 +60,7 @@ end
 ---TODO: replace '3' with a constant
 function Card:countdown()
     self.turnsLeft = (self.turnsLeft + 3 - 1) % 3
-    if self.turnsLeft == 0 then self.isActive = true end
+    self.isActive = (self.turnsLeft == 0) and true or false
 end
 
 return Card

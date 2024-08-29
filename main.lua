@@ -1,5 +1,6 @@
 dofile("./card.lua")
 dofile("./utils.lua")
+dofile("./goal.lua")
 
 function love.load()
     ArenaWidth = 1024
@@ -19,12 +20,20 @@ function love.load()
     SideBarCenterX = SideBarX + (ArenaWidth - SideBarX) / 2
     SideBarCenterY = ArenaHeight / 2
 
+    Score = 0
+    GoalTimer = 0
+
     MixWeight = 0.5
 
     GoalBoxColor = GetRandomGoal()
-    GoalBoxX = BoardOffsetX + (Card.WIDTH * MaxBoardColCount) + (BoardOffsetX * 2)
-    GoalBoxY = BoardOffsetY
-    GoalBoxWidth = 64
+
+    GoalBox = Goal.new(
+        GoalBoxColor,
+        BoardOffsetX + (Card.WIDTH * MaxBoardColCount) + (BoardOffsetX * 2),
+        BoardOffsetY,
+        64,
+        10
+    )
 
     local splitcolors = SplitHue(GoalBoxColor, MixWeight)
 
@@ -63,10 +72,15 @@ function love.mousereleased(x, y, button, _, _)
             end
         end
 
+        ---TODO: set a flag for the love.update then move the 'countdown' to update
         for cardIdx, card in ipairs(Board) do
             card:countdown()
         end
     end
+end
+
+function love.update(dt)
+
 end
 
 function love.draw()
@@ -84,6 +98,5 @@ function love.draw()
     love.graphics.rectangle('fill', MixBoxX, MixBoxY, MixBoxWidth, MixBoxWidth)
 
     -- draw goal box
-    love.graphics.setColor(love.math.colorFromBytes(GoalBoxColor.r, GoalBoxColor.g, GoalBoxColor.b))
-    love.graphics.rectangle('fill', GoalBoxX, GoalBoxY, GoalBoxWidth, GoalBoxWidth)
+    GoalBox:draw()
 end
