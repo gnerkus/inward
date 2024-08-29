@@ -137,4 +137,10 @@ function love.draw()
     love.graphics.origin()
     love.graphics.setColor(1, 1, 1)
     love.graphics.print(math.ceil(GoalBox.timeLeft), ArenaWidth - BoardOffsetX - 64, BoardOffsetY)
+
+    ---draw score
+    love.graphics.print(Score, ArenaWidth - BoardOffsetX - 64, ArenaHeight - BoardOffsetY - 64)
+
+    ---draw hp
+    love.graphics.print(PlayerHP, ArenaWidth - BoardOffsetX - 64, BoardOffsetY + 64 + 32, 0, 0.75)
 end
