@@ -2,12 +2,19 @@ Gamestates = require "gamestates"
 Urutora = require("libs/urutora")
 UI = Urutora:new()
 
+local uiStyle = {
+    outline = false,
+    cornerRadius = 0.5
+}
+
+
 ---TODO: enable music
 -- music = love.audio.newSource("sounds/music/S31-Night Prowler.ogg")
 -- music:setLooping(true)
 
 function love.load()
     Gamestates.set_state("states/menu")
+    UI:setStyle(uiStyle)
 end
 
 function love.update(dt)
@@ -16,8 +23,8 @@ function love.update(dt)
 end
 
 function love.draw()
-    Gamestates.state_event("draw")
     UI:draw()
+    Gamestates.state_event("draw")
 end
 
 function love.keyreleased(key, code)

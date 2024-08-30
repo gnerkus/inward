@@ -10,6 +10,7 @@ function GameOver()
 end
 
 function game.load()
+    UI:deactivateByTag("menu")
     local font = love.graphics.newFont(64, "mono")
     font:setFilter("nearest")
     love.graphics.setFont(font)
