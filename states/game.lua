@@ -94,9 +94,9 @@ function game.mousereleased(x, y, button, _, _)
         local cardIdx = MousePosToCardIdx(x, y)
 
         if cardIdx > 0 then
-            HasInput = true
             local card = Board[cardIdx]
             if card.isActive then
+                HasInput = true
                 MixBoxColor = MixHue(MixBoxColor, card.color)
                 GoalBox:check_mix(MixBoxColor)
             end

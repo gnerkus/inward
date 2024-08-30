@@ -8,7 +8,7 @@ setmetatable(Card, {
 })
 
 Card.WIDTH = 64
-Card.SIZE_TABLE = { 48, 36, 16 }
+Card.SIZE_TABLE = { 56, 56, 28 }
 Card.MAX_TURNS = 2
 
 ---creates a copy of the Card table with all the methods
@@ -34,16 +34,39 @@ function Card:draw(xPos, yPos)
     local topY = yPos - size / 2
 
     if self.isActive then
-        love.graphics.setColor({ 1, 1, 1, 1 })
-        love.graphics.rectangle('line', topX - 4, topY - 4, size + 8, size + 8)
+        love.graphics.setColor(love.math.colorFromBytes(
+            self.color.r,
+            self.color.g,
+            self.color.b
+        ))
+        love.graphics.rectangle('fill', topX, topY, size, size)
+    elseif self.turnsLeft == 1 then
+        love.graphics.setColor(love.math.colorFromBytes(
+            self.color.r,
+            self.color.g,
+            self.color.b
+        ))
+        love.graphics.rectangle('fill', topX, topY, size, size)
+        love.graphics.setColor(love.math.colorFromBytes(
+            0,
+            0,
+            0
+        ))
+        love.graphics.rectangle('fill', topX + 4, topY + 4, size - 8, size - 8)
+    else
+        love.graphics.setColor(love.math.colorFromBytes(
+            self.color.r,
+            self.color.g,
+            self.color.b
+        ))
+        love.graphics.rectangle('fill', topX, topY, size, size)
+        love.graphics.setColor(love.math.colorFromBytes(
+            0,
+            0,
+            0
+        ))
+        love.graphics.rectangle('fill', topX + 4, topY + 4, size - 8, size - 8)
     end
-
-    love.graphics.setColor(love.math.colorFromBytes(
-        self.color.r,
-        self.color.g,
-        self.color.b
-    ))
-    love.graphics.rectangle('fill', topX, topY, size, size)
 end
 
 function Card:get_color_bytes()

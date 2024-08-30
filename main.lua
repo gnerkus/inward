@@ -1,3 +1,4 @@
+dofile("utils.lua")
 Gamestates = require "gamestates"
 Urutora = require("libs/urutora")
 UI = Urutora:new()
