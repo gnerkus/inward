@@ -189,3 +189,12 @@ function MousePosToCardIdx(posX, posY)
         return (row - 1) * BoardSize + column
     end
 end
+
+function GetKeyForValue(t, value)
+    for k, v in pairs(t) do
+        if v == value then
+            return k
+        end
+    end
+    return nil
+end
