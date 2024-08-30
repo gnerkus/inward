@@ -1,24 +1,23 @@
 Gamestates = require "gamestates"
+Urutora = require("libs/urutora")
+UI = Urutora:new()
 
 ---TODO: enable music
 -- music = love.audio.newSource("sounds/music/S31-Night Prowler.ogg")
 -- music:setLooping(true)
 
 function love.load()
-    local love_window_width = 1024
-    local love_window_height = 640
-    love.window.setMode(love_window_width,
-        love_window_height,
-        { fullscreen = false })
     Gamestates.set_state("states/menu")
 end
 
 function love.update(dt)
     Gamestates.state_event("update", dt)
+    UI:update(dt)
 end
 
 function love.draw()
     Gamestates.state_event("draw")
+    UI:draw()
 end
 
 function love.keyreleased(key, code)
@@ -27,6 +26,27 @@ end
 
 function love.mousereleased(x, y, button, istouch)
     Gamestates.state_event("mousereleased", x, y, button, istouch)
+    UI:released(x, y, button)
+end
+
+function love.mousepressed(x, y, button)
+    UI:pressed(x, y, button)
+end
+
+function love.mousemoved(x, y, dx, dy)
+    UI:moved(x, y, dx, dy)
+end
+
+function love.textinput(text)
+    UI:textinput(text)
+end
+
+function love.keypressed(k, scancode, isrepeat)
+    UI:keypressed(k, scancode, isrepeat)
+end
+
+function love.wheelmoved(x, y)
+    UI:wheelmoved(x, y)
 end
 
 function love.quit()
