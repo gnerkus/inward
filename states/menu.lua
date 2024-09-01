@@ -6,6 +6,7 @@ function menu.load()
         x = 10,
         y = 10,
         w = 200,
+        tag = 'menu'
     })
 
     local num = 0

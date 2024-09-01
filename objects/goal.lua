@@ -1,5 +1,3 @@
-dofile("utils.lua")
-
 Goal = {}
 Goal.__index = Goal
 
